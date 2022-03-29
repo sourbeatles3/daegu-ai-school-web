@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>슛 성공률 계산기</title>
+    </head>
+
+    <body>
+            <input type="button" value="슛 성공률" onclick="
+                let 시도 = Number(prompt('몇 개의 슛을 시도했니?  '));
+                let 성공 = Number(prompt('몇 개의 슛을 성공했니?  '));
+                let 성공률 = (성공/시도) * 100;
+                if(시도 >= 성공) {
+                    alert(`네 슛 성공률은 ${성공률}%구나`);
+                } else {
+                    alert('네가 시도한 슛보다 많이 성공했을리가 없어');
+                }
+            ">
+<!-- 
+            <input type="button" value="부가세계산기" onclick="
+                let 가격 = Number(prompt('가격? '));
+                alert(가격 * 0.1);     
+            "> -->
+    </body>
+</html>
