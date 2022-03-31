@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, redirect
 
 app = Flask(__name__)
 
@@ -7,8 +7,9 @@ topics = [
   {"id":2, "title":"css", "body":"css is ...."},
   {"id":3, "title":"js", "body":"js is ...."}
 ]
+nextId = 4
 
-def template(content):
+def template(content, id=None):
   liTags = ''
   for topic in topics:
     liTags = liTags + f'<li><a href="/read/{topic["id"]}/">{topic["title"]}</a></li>'
@@ -22,6 +23,11 @@ def template(content):
       {content}
       <ul>
         <li><a href="/create/">Create</a></li>
+        <li>
+          <form action="/delete/{id}/" method="POST">
+            <input type="submit" value="delete">
+          </form>
+        </li>
       </ul>
     </body>
   </html>
@@ -40,12 +46,12 @@ def read(id):
       title = topic['title']
       body = topic['body']
       break;
-  return template(f'<h2>{body}</h2>')
+  return template(f'<h2>{body}</h2>', id)
 
 @app.route('/create/')
 def create():
   content = '''
-    <form action="/create/">
+    <form action="/create_process/" method="POST">
       <p><input type="text" name="title" placeholder="title"></p>
       <p><textarea name="body" placeholder="body"></textarea></p>
       <p><input type="submit" value="create"></p>
@@ -53,8 +59,26 @@ def create():
   '''
   return template(content)
 
-@app.route('/update/')
-def update():
-  return 'Update'
+@app.route('/create_process/', methods=['POST'])
+def create_process():
+  global nextId
+  title = request.form['title']
+  body = request.form['body']
+  newTopic = {"id":nextId, "title":title, "body":body}
+  topics.append(newTopic)
+  nextId = nextId + 1
+  return redirect(f'/read/{nextId-1}/')
+
+@app.route('/delete/<int:id>/', methods=['POST'])
+def delete(id):
+  for topic in topics:
+    if topic['id'] == id:
+      topics.remove(topic)
+      break
+  return redirect('/')
+
+# @app.route('/update/')
+# def update():
+#   return 'Update'
 
 app.run()
