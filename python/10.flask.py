@@ -45,7 +45,7 @@ def read(id):
     if topic['id'] == id:
       title = topic['title']
       body = topic['body']
-      break;
+      break
   return template(f'<h2>{body}</h2>', id)
 
 @app.route('/create/')
